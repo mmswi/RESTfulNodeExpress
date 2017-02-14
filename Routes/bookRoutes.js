@@ -31,8 +31,14 @@ const routes = (Book) => {
 // getting a single item by its id
     bookRouter.route('/:bookId')
         .get((req, res) => {
+            // adding links here for HATEOS
+            const returnBook = req.book.toJSON();
+            returnBook.links = {};
+            let newLink = 'http://' + req.headers.host + '/api/books/?genre=' + returnBook.genre
+            returnBook.links.FilterByThisGenre = newLink.replace(' ', '%20');
             // by using the middleware, we just do a res.json and send the book back
-            res.json(req.book);
+            // res.json(req.book);
+            res.json(returnBook);
         })
         // updating items - all fields
         .put((req, res) => {

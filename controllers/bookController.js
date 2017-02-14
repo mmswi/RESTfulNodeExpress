@@ -25,8 +25,18 @@ const bookController = (Book) => {
         Book.find(query, (err, books) => {
             if (err)
                 res.status(500).send(err);
-            else
-                res.json(books)
+            else {
+                // ADDING HATEOS
+                const returnBooks = [];
+                books.forEach((element, index, array) => {
+                    // adding links on the element, but not in the db
+                    let newBook = element.toJSON();
+                    newBook.links = {};
+                    newBook.links.self = 'http://' + req.headers.host + '/api/books/' + newBook._id;
+                    returnBooks.push(newBook);
+                });
+                res.json(returnBooks)
+            }
         })
     }
 
