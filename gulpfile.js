@@ -2,7 +2,10 @@
  * Created by mmarinescu on 2/13/2017.
  */
 const gulp = require('gulp'),
-    nodemon = require('gulp-nodemon')
+    nodemon = require('gulp-nodemon'),
+    gulpMocha = require('gulp-mocha'),
+    env = require('gulp-env'),
+    supertest = require('supertest');
 
 gulp.task('default', () => {
     nodemon({
@@ -16,4 +19,10 @@ gulp.task('default', () => {
     .on('restart', () => {
         console.log('Restarting...')
     })
+})
+
+gulp.task('test', () => {
+    env({vars: {ENV: 'Test'}});
+    gulp.src('tests/*.js', {read: false})
+        .pipe(gulpMocha({reporter: 'nyan'}))
 })

@@ -6,28 +6,13 @@ const express = require('express')
 const routes = (Book) => {
     const bookRouter = express.Router();
 
+    // using controllers
+    const bookController = require('../controllers/bookController')(Book)
+
     //url will be api/books/
     bookRouter.route('/')
-        .get((req, res) => {
-            // query is for routes like api/books?genre=Science%20Fiction, or api/books?author=Science%20Fiction
-            let query = {};
-            if (req.query.genre) {
-                //avoiding random user input for the filtering
-                query.genre = req.query.genre;
-            }
-            Book.find(query, (err, books) => {
-                if (err)
-                    res.status(500).send(err);
-                else
-                    res.json(books)
-            })
-        })
-        .post((req, res) => {
-            let book = new Book(req.body);
-
-            book.save();
-            res.status(201).send(book);
-        })
+        .get(bookController.get)
+        .post(bookController.post)
 
 //    Creating a middleware to filter the books by ids
     bookRouter.use('/:bookId', (req, res, next) => {

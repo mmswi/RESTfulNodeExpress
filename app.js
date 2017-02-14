@@ -7,7 +7,13 @@ const express = require('express'),
     bodyParser = require('body-parser');
 
 //bookAPI is the db we're connecting to
-const db = mongoose.connect('mongodb://localhost/bookAPI');
+let db;
+if(process.env.ENV == 'Test') {
+    // mongoose will create the db, when it doesn't exist
+    db = mongoose.connect('mongodb://localhost/bookAPI_test');
+} else {
+    db = mongoose.connect('mongodb://localhost/bookAPI');
+}
 const Book = require('./models/bookModel');
 const Author = require('./models/authorModel');
 // injecting the Book into bookrouter
@@ -31,3 +37,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
     console.log('Running on the port ' + port)
 })
+
+module.exports = app;
